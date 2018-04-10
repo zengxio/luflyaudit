@@ -8,4 +8,5 @@ admin.site.register(models.HostUser)
 admin.site.register(models.Account)
 admin.site.register(models.AuditLog)
 admin.site.register(models.IDC)
+admin.site.register(models.SessionLog)
 

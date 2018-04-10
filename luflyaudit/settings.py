@@ -25,7 +25,7 @@ SECRET_KEY = '9#v#xy$bln!p9mj37$9qiff2p^a9(_ayronp0g(102^*-k4x!-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -122,3 +122,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 #
 # TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates'),)
+SESSION_TRACKER_SCRIPT=os.path.join(BASE_DIR,'audit/backend/session_tracker.sh')
