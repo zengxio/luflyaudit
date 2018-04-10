@@ -71,4 +71,3 @@ class UserShell(object):
 
                         elif choice2 == 'b':
                             break
-

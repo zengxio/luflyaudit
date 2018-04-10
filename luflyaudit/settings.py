@@ -123,3 +123,4 @@ STATIC_URL = '/static/'
 #
 # TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates'),)
 SESSION_TRACKER_SCRIPT=os.path.join(BASE_DIR,'audit/backend/session_tracker.sh')
+# /root/luflyaudit/audit/backend/session_tracker.sh

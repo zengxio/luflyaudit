@@ -5,14 +5,14 @@
    2.2 strace
    2.3 strace 需要 唯一标识
    2.4 改ssh的参数处理的源码 -Z
-        修改c代码之后。安装./configure  &&  make  && make install 。再次修改之后先执行make clean && make && make install
-         while ((opt = getopt(ac, av, "1246ab:c:e:fgi:kl:m:no:p:qstvxz:"
-            "ACD:E:F:GI:J:KL:MNO:PQ:R:S:TVw:W:XYyZ:")) != -1) { 加z:
-            
-         case 'Z':
-              fprintf(stdout,"session_tag: %s\n" ,optarg);
-              break;
-         default 上面935
+        修改c代码之后
+        while ((opt = getopt(ac, av, "1246ab:c:e:fgi:kl:m:no:p:qstvxz:"
+           "ACD:E:F:GI:J:KL:MNO:PQ:R:S:TVw:W:XYyZ:")) != -1) { 加z:
+
+        case 'Z':
+             fprintf(stdout,"session_tag: %s\n" ,optarg);
+             break;
+        default 上面935
         ./configure 生成配置文件
         make 编译  (如需要改源码重新编译。需先执行make clean 再make &&  make install)
         make install 安装
@@ -30,7 +30,6 @@
 
    4、修复无法创建数据库，然后要删除数据库
     python manage.py migrate --fake #强制执行
-
 
 
 
