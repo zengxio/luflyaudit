@@ -38,6 +38,7 @@ class HostUser(models.Model):
     class Meta:
         unique_together=('username','password')
 
+
 class SessionLog(models.Model):
     account=models.ForeignKey("Account")
     host_user_bind=models.ForeignKey("HostUserBind")
