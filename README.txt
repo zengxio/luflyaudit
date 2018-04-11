@@ -31,7 +31,7 @@
    4、修复无法创建数据库，然后要删除数据库
     python manage.py migrate --fake #强制执行
 
-   5、编写分析日志脚本
+   5、编写分析日志脚本audit.py 
    6、在普通用户下，一登陆就进入session_tracker脚本
       vi /home/zxy/.bashrc
           echo "......welome to luflu audit......"
