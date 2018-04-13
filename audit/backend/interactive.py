@@ -70,6 +70,9 @@ def posix_shell(chan,session_obj):
                     # f.write("%s\t%s\n" %(time.time(),cmd))
                     models.AuditLog.objects.create(session=session_obj,cmd=cmd)
                     cmd = ''
+
+                # elif x=='\t':
+                #     x.replace(' ','')
                 else:
                     cmd+=x
                 chan.send(x)

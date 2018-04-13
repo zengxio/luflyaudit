@@ -120,6 +120,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-#
+
+LOGIN_URL='/login/'
+STATICFILES_DIRS=(os.path.join(BASE_DIR,'static'),)
 # TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates'),)
 SESSION_TRACKER_SCRIPT=os.path.join(BASE_DIR,'audit/backend/session_tracker.sh')
