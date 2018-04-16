@@ -55,6 +55,18 @@ class AuditLog(models.Model):
     def __str__(self):
         return "%s-%s"%(self.session,self.cmd)
 
+class Token(models.Model):
+    host_user_bind=models.ForeignKey("HostUserBind")
+    val=models.CharField(max_length=108)
+    account=models.ForeignKey("Account")
+    expire=models.IntegerField("超时时间(s)",default=300)
+    date=models.DateTimeField(auto_now_add=True)
+    class Meta:
+        unique_together=('host_user_bind','val')
+
+    def __str__(self):
+        return "%s-%s"%(self.host_user_bind,self.val)
+
 class HostUserBind(models.Model):
     """绑定主机和用户"""
     host=models.ForeignKey("Host")

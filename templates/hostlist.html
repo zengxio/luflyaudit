@@ -24,7 +24,67 @@
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     <!--End breadcrumb-->
       <div id="page-content">
-                    page content host list
-                    {{ request.path }}
+        <div class="panel col-lg-3">
+            <div class="panel-heading">
+                <h3 class="panel-title">主机组</h3>
+            </div>
+            <div class="panel-body">
+
+                <ul class="list-group">
+                    {% for group in request.user.account.host_groups.all %}
+                        <li class="list-group-item" onclick="GetHostList({{ group.id }},this)"><span class="badge badge-success">{{ group.host_user_binds.count }}</span>{{ group.name }}</li>
+
+                    {% endfor %}
+                    <li class="list-group-item" onclick="GetHostList(-1,this)"><span class="badge badge-success">{{ request.user.account.host_user_binds.count }}</span>未分组主机</li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="panel col-lg-9">
+            <div class="panel-heading">
+                <h3 class="panel-title">主机列表</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Hostname</th>
+                                <th>IP</th>
+                                <th>IDC</th>
+                                <th>Port</th>
+                                <th>Username</th>
+                                <th>Login</th>
+                                <th>Token</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hostlist"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
       </div>
+    <script>
+        function GetToken(self,bind_host_id) {
+            $.post("{% url 'get_token' %}",{'bind_host_id':bind_host_id,'csrfmiddlewaretoken':'{{ csrf_token }}'},function(callback){
+                console.log(callback);
+            })
+        };
+        function GetHostList(gid,self) {
+            $.get("{% url 'get_host_list' %}",{'gid':gid},function(callback){
+
+                var data=JSON.parse(callback);  //callback后台返回的数据
+{#                console.log(data);#}
+                var trs='';
+                $.each(data,function (index,item) {
+                    var tr='<tr><td>'+item.host__hostname+"</td><td>"+item.host__ip_addr+"</td><td>"+item.host__idc__name+"</td><td>"+item.host__port+"</td><td>"+item.host_user__username+"</td><td><a class='btn btn-info' onclick=GetToken(this,'"+item.id+"')>Token</a>Login</td><td></td></tr>"
+                    trs+=tr
+
+                });
+                $("#hostlist").html(trs)
+
+            });
+            $(self).addClass("active").siblings().removeClass("active")
+        }
+    </script>
 {% endblock %}

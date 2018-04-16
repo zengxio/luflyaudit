@@ -18,5 +18,6 @@ admin.site.register(models.Account)
 admin.site.register(models.AuditLog,AuditLogAdmin)
 admin.site.register(models.IDC)
 admin.site.register(models.SessionLog,SessionLogAdmin)
+admin.site.register(models.Token)
 
 
