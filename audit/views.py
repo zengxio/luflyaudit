@@ -56,11 +56,11 @@ def get_host_list(request):
 def get_token(request):
     """生成token并返回"""
     bind_host_id = request.POST.get('bind_host_id')
-    time_obj=datetime.datetime.now()-datetime.timedelta(seconds=300) #5mins ago
+    time_obj=datetime.datetime.utcnow()-datetime.timedelta(seconds=300) #5mins ago
     exist_token_obj=models.Token.objects.filter(account_id=request.user.account.id,
                                                 host_user_bind_id=bind_host_id,
                                                 date__gt=time_obj)
-    print(exist_token_obj)
+
     if exist_token_obj:#has token already
         token_data={'token':exist_token_obj.first().val}
     else:
