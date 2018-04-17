@@ -2,6 +2,9 @@ from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 import json
+from audit import models
+import random,string
+import datetime
 # Create your views here.
 @login_required
 def index(request):
@@ -52,4 +55,23 @@ def get_host_list(request):
 @login_required
 def get_token(request):
     """生成token并返回"""
-    bind_host_id=request.POST.get('bind_host_id')
+    bind_host_id = request.POST.get('bind_host_id')
+    # time_obj=datetime.datetime.now()-datetime.timedelta(seconds=300) #5mins ago
+    time_obj=(datetime.datetime.now() - datetime.timedelta(seconds=2800))
+
+    exist_token_obj=models.Token.objects.filter(account_id=request.user.account.id,
+                                                host_user_bind_id=bind_host_id,
+                                                date__gt=time_obj)
+    print(exist_token_obj)
+    if exist_token_obj:#has token already
+        token_data={'token':exist_token_obj.first().val}
+    else:
+        token_val=''.join(random.sample(string.ascii_lowercase+string.digits,8))
+        models.Token.objects.create(
+            host_user_bind_id=bind_host_id,
+            account=request.user.account,
+            val=token_val
+        )
+        token_data={'token':token_val}
+
+    return HttpResponse(json.dumps(token_data))
