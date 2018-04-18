@@ -5,7 +5,7 @@ import subprocess, string, random
 from audit import models
 from django.conf import settings
 from audit.backend import ssh_interactive
-
+import datetime
 
 class UserShell(object):
     """用户登录堡垒机后的shll"""
@@ -31,9 +31,30 @@ class UserShell(object):
         else:
             print("too many attempts")
 
+    def token_auth(self):
+        count = 0
+        while count < 3:
+            user_input=input("input you axxess token.press Enter if doesn't have:").strip()
+            if len(user_input)==0:
+                return
+            if len(user_input)!=8:
+                print("token length is 8")
+            else:
+                time_obj = datetime.datetime.utcnow() - datetime.timedelta(seconds=300)  # 5mins ago
+                token_objs=models.Token.objects.filter(val=user_input,date__gt=time_obj)
+                if token_objs:
+                    token_obj=token_objs.latest()
+                    if token_obj.val==user_input:
+                        self.user=token_obj.account.user
+                        return token_obj
+
     def start(self):
         """启动交互程序"""
 
+        token_obj=self.token_auth()
+        if token_obj:
+            ssh_interactive.ssh_session(token_obj, self.user)
+            exit()
         if self.auth():
             # print(self.user.account.host_user_binds.all())  #查找该用户的堡垒机账户
             while True:
