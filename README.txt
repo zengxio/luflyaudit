@@ -86,3 +86,4 @@ web 开发模式
 
 
 注意: 由于数据库sqllite 是用的utc时间。所以代码里面出现了time_obj = datetime.datetime.utcnow() - datetime.timedelta(seconds=300) 。
+如果需要字符编码的错误，修改linux服务器上的该文件 /usr/local/python/lib/python3.5/site-packages/paramiko/py3compat.py    将utf8换成gbk
