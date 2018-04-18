@@ -73,3 +73,7 @@ def get_token(request):
         token_data={'token':token_val}
 
     return HttpResponse(json.dumps(token_data))
+
+@login_required
+def multi_cmd(request):
+    return render(request,'multi_cmd.html')

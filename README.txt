@@ -61,6 +61,17 @@
     1、ssh命令行
     2、图像界面
     3、web ssh
+    登录shellinabox无需认证登录
+    4、django
+        4.1选择要登录的机器，生成token(令牌、口令)
+        4.2拿着口令到shellinabox那里
+    5、shellinabox
+        4.1提示用户输入口令
+        4.2验证口令是否正确
+                4.2.1如果正确，登录口令对应的机器
+                4.2.2否则，禁止登录
+
+
 
 web 开发模式
     1、mvc mtv
@@ -76,4 +87,3 @@ web 开发模式
 
 
 注意: 由于数据库sqllite 是用的utc时间。所以代码里面出现了time_obj = datetime.datetime.utcnow() - datetime.timedelta(seconds=300) 。
-
