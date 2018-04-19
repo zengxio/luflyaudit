@@ -59,7 +59,11 @@
             <div class="panel-heading">
                 <h3 class="panel-title">命令</h3>
             </div>
-            <div class="panel-body">ddd</div>
+            <div class="panel-body">
+                <textarea class="form-control" id="cmd"></textarea>
+                <button onclick="PostTask('cmd')" class="btn btn-success pull-right">执行</button>
+                <button class="btn btn-danger pull-right">终止</button>
+            </div>
         </div>
 
             <div class="panel">
@@ -83,6 +87,38 @@
             var selected_host_count=$("#host-group ul").find(":checked").length; //统计选中的主机
             $("#selected_hosts").text(selected_host_count);
             return selected_host_count
+        }
+
+        function PostTask(task_type) {
+            //1、验证主机列表已选，命令已输入
+            //2、提交任务到后台
+            var selected_host_ids=[];
+            var selected_host_eles=$("#host-group ul").find(":checked");
+            $.each(selected_host_eles,function (index,ele) {
+                selected_host_ids.push($(ele).val())
+
+            });
+            console.log(selected_host_ids);
+            if (selected_host_ids.length==0){
+                 alert("主机未选择");
+                return false
+            }
+            var cmd_text=$("#cmd").val().trim();
+            if(cmd_text.length==0){
+                alert("未输入命令");
+                 return false
+            };
+            var task_data={
+                "task_type":task_type,
+                "selected_host_ids":selected_host_ids,
+                'cmd':cmd_text
+            };
+            $.post("{% url 'multitask' %}",{'csrfmiddlewaretoken':"{{ csrf_token }}",'task_data':JSON.stringify(task_data)},
+                function(callback){
+                    console.log(callback) //task id
+                });//cmd post
+
+
         }
     </script>
 {% endblock %}

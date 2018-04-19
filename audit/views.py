@@ -1,10 +1,16 @@
-from django.shortcuts import render,HttpResponse,redirect
-from django.contrib.auth import authenticate,login,logout
-from django.contrib.auth.decorators import login_required
-import json
-from audit import models
-import random,string
 import datetime
+import json
+import random
+import string
+
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, HttpResponse, redirect
+
+from audit import models
+from audit.backend import task_handler
+
+
 # Create your views here.
 @login_required
 def index(request):
@@ -77,3 +83,11 @@ def get_token(request):
 @login_required
 def multi_cmd(request):
     return render(request,'multi_cmd.html')
+
+@login_required
+def multitask(request):
+    task_obj= task_handler.Task(request)
+    if task_obj.is_valid():
+        result=task_obj.run()
+        return HttpResponse(json.dumps({'task_id':result}))
+    return HttpResponse(json.dumps(task_obj.errors))
