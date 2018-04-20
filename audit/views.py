@@ -91,3 +91,17 @@ def multitask(request):
         result=task_obj.run()
         return HttpResponse(json.dumps({'task_id':result}))
     return HttpResponse(json.dumps(task_obj.errors))
+
+@login_required
+def multitask_result(request):
+    task_id=request.GET.get('task_id')
+    task_obj=models.Task.objects.get(id=task_id)
+    results=list(task_obj.tasklog_set.values('id','status',
+                                'host_user_bind__host__hostname',
+                                'host_user_bind__host__ip_addr',
+                                'result'))
+    return HttpResponse(json.dumps(results))
+
+@login_required
+def multi_file_transfer(request):
+    return render(request,'multi_file_transfer.html')

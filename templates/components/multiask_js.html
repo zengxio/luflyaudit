@@ -1,0 +1,82 @@
+<script>
+        function DisplayHostList(self) {
+            $(self).next().toggleClass("hide")
+        }
+        function CheckAll(self) {
+            $(self).parent().find("ul :checkbox").prop("checked",$(self).prop('checked')); //根据外层选中的结果来控制内层选中的情况
+            ShowCheckedHostCount();
+        }
+        function ShowCheckedHostCount() {
+            var selected_host_count=$("#host-group ul").find(":checked").length; //统计选中的主机
+            $("#selected_hosts").text(selected_host_count);
+            return selected_host_count
+        }
+
+        function GetTaskResult(task_id) {
+            $.getJSON("{% url 'get_task_result' %}",{'task_id':task_id},function(callback){
+                console.log(callback);
+                var result_ele='';
+                var finished_task_count=0;
+                $.each(callback,function (index,i) {
+                    var p_ele="<p>"+i.host_user_bind__host__hostname+"("+i.host_user_bind__host__ip_addr+")------"+
+                            i.status+"</p>";
+                    var res_ele="<pre>"+i.result+"</pre>";  //显示成执行结果的样子
+                    single_result=p_ele+res_ele;
+                    result_ele+=single_result;
+                    if(i.status!=3){
+                          //task not finished yet
+                        finished_task_count+=1
+                    }
+                    if(i.status==0){
+                        clearInterval(result_timer)}
+
+                //task_progress
+                $("#task_result").html(result_ele);
+                //set progress bar
+                var total_finished_percent=parseInt(finished_task_count/callback.length*100);
+                $("#task_progress").text(total_finished_percent+"%");
+                $("#task_progress").css("width",total_finished_percent+"%")
+
+
+            });
+        })};
+
+        function PostTask(task_type) {
+            //1、验证主机列表已选，命令已输入
+            //2、提交任务到后台
+            var selected_host_ids=[];
+            var selected_host_eles=$("#host-group ul").find(":checked");
+            $.each(selected_host_eles,function (index,ele) {
+                selected_host_ids.push($(ele).val())
+
+            });
+            console.log(selected_host_ids);
+            if (selected_host_ids.length==0){
+                 alert("主机未选择");
+                return false
+            }
+            var cmd_text=$("#cmd").val().trim();
+            if(cmd_text.length==0){
+                alert("未输入命令");
+                 return false
+            };
+            var task_data={
+                "task_type":task_type,
+                "selected_host_ids":selected_host_ids,
+                'cmd':cmd_text
+            };
+            $.post("{% url 'multitask' %}",{'csrfmiddlewaretoken':"{{ csrf_token }}",'task_data':JSON.stringify(task_data)},
+                function(callback){
+                    console.log(callback); //task id
+                    var callback=JSON.parse(callback);
+                    GetTaskResult(callback.task_id);
+                    result_timer=setInterval(function () {
+                        GetTaskResult(callback.task_id)
+                    },2000);
+
+
+                });//cmd post
+
+
+        }
+    </script>

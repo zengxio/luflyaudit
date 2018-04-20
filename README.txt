@@ -83,7 +83,23 @@ web 开发模式
              减轻了web框架独自创建渲染模块的压力
 
 
+批量管理
+	命令
+		1、验证任务合法性
+		2、生成任务id
+			2.1在数据库生成一条任务记录，id本身就是唯一
+		3、执行任务，非阻塞
+			3.1 多进程执行任务
+				3.1.1 把结果写入数据库，写入结果时，注明任务id
+		4、返回任务id给前端
+		主机列表传递给脚本的方式
+		1、直接传参数
+			linux接收特别长的参数可能会出问题
+			执行1万台中间down机，部分机器的执行结果会丢失
+			无法在前端做进度条
+		2、初始化数据表tasklog
 
+	文件分发
 
 注意: 由于数据库sqllite 是用的utc时间。所以代码里面出现了time_obj = datetime.datetime.utcnow() - datetime.timedelta(seconds=300) 。
 如果需要字符编码的错误，修改linux服务器上的该文件 /usr/local/python/lib/python3.5/site-packages/paramiko/py3compat.py    将utf8换成gbk

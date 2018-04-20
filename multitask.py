@@ -17,7 +17,7 @@ def cmd_run(tasklog_id,task_id,cmd_str):
                     tasklog_obj.host_user_bind.host.port,
                     tasklog_obj.host_user_bind.host_user.username,
                     tasklog_obj.host_user_bind.host_user.password,
-                    timeout=15
+                    timeout=20
                     )
         stdin, stdout, stderr = ssh.exec_command(cmd_str)
         result=stdout.read()+stderr.read()
@@ -54,7 +54,7 @@ if __name__ == '__main__':
         task_func=cmd_run
     else:
         task_func=file_transfer
-  
+
     for bind_host in task_obj.tasklog_set.all():
         pool.apply_async(task_func,args=(bind_host.id,task_obj.id,task_obj.content))
 

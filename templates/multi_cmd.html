@@ -23,102 +23,21 @@
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     <!--End breadcrumb-->
     <div id="page-content">
-        <div class="panel col-lg-3">
-            <div class="panel-heading">
-                <h3 class="panel-title">主机组<span id="selected_hosts"></span></h3>
-            </div>
-            <div class="panel-body">
-                 <ul class="list-group" id="host-group">
-                    {% for group in request.user.account.host_groups.all %}
-                        <li class="list-group-item" ><span class="badge badge-success">{{ group.host_user_binds.count }}</span>
-                            <input type="checkbox" onclick="CheckAll(this)">
-                            <a onclick="DisplayHostList(this)">{{ group.name }}</a>
-                            <ul class="hide">
-                                {% for bind_host in group.host_user_binds.all %}
-                                    <li><input onclick="ShowCheckedHostCount()" type="checkbox" value="{{ bind_host.id }}">{{ bind_host.host.ip_addr }}</li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-
-                    {% endfor %}
-                    <li class="list-group-item"><span class="badge badge-success">{{ request.user.account.host_user_binds.count }}</span>
-                        <input type="checkbox" onclick="CheckAll(this)">
-                        <a onclick="DisplayHostList(this)">未分组主机</a>
-                         <ul class="hide">
-                                {% for bind_host in request.user.account.host_user_binds.all %}
-                                    <li><input onclick="ShowCheckedHostCount()" type="checkbox" value="{{ bind_host.id }}">{{ bind_host.host.ip_addr }}</li>
-                                {% endfor %}
-                         </ul>
-                    </li>
-
-                </ul>
-            </div>
-        </div>
-    <div class="col-lg-9">
-        <div class="panel">
-            <div class="panel-heading">
-                <h3 class="panel-title">命令</h3>
-            </div>
-            <div class="panel-body">
-                <textarea class="form-control" id="cmd"></textarea>
-                <button onclick="PostTask('cmd')" class="btn btn-success pull-right">执行</button>
-                <button class="btn btn-danger pull-right">终止</button>
-            </div>
-        </div>
-
+        {% include 'components/hostgroups.html' %}
+        <div class="col-lg-9">
             <div class="panel">
                 <div class="panel-heading">
                     <h3 class="panel-title">命令</h3>
                 </div>
-                <div class="panel-body">ddd</div>
+                <div class="panel-body">
+                    <textarea class="form-control" id="cmd"></textarea>
+                    <button onclick="PostTask('cmd')" class="btn btn-success pull-right">执行</button>
+                    <button class="btn btn-danger pull-right">终止</button>
+                </div>
             </div>
-    </div>
+            {% include 'components/taskresult.html' %}
+        </div>
 
     </div>
-    <script>
-        function DisplayHostList(self) {
-            $(self).next().toggleClass("hide")
-        }
-        function CheckAll(self) {
-            $(self).parent().find("ul :checkbox").prop("checked",$(self).prop('checked')); //根据外层选中的结果来控制内层选中的情况
-            ShowCheckedHostCount();
-        }
-        function ShowCheckedHostCount() {
-            var selected_host_count=$("#host-group ul").find(":checked").length; //统计选中的主机
-            $("#selected_hosts").text(selected_host_count);
-            return selected_host_count
-        }
-
-        function PostTask(task_type) {
-            //1、验证主机列表已选，命令已输入
-            //2、提交任务到后台
-            var selected_host_ids=[];
-            var selected_host_eles=$("#host-group ul").find(":checked");
-            $.each(selected_host_eles,function (index,ele) {
-                selected_host_ids.push($(ele).val())
-
-            });
-            console.log(selected_host_ids);
-            if (selected_host_ids.length==0){
-                 alert("主机未选择");
-                return false
-            }
-            var cmd_text=$("#cmd").val().trim();
-            if(cmd_text.length==0){
-                alert("未输入命令");
-                 return false
-            };
-            var task_data={
-                "task_type":task_type,
-                "selected_host_ids":selected_host_ids,
-                'cmd':cmd_text
-            };
-            $.post("{% url 'multitask' %}",{'csrfmiddlewaretoken':"{{ csrf_token }}",'task_data':JSON.stringify(task_data)},
-                function(callback){
-                    console.log(callback) //task id
-                });//cmd post
-
-
-        }
-    </script>
+    {% include 'components/multiask_js.html' %}
 {% endblock %}
