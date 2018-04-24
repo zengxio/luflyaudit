@@ -1,6 +1,7 @@
 {% extends 'index.html' %}
 {% block extra-css %}
-    <link rel="stylesheet" href="/static/plugins/dropzone/dropzone.css">
+    <link rel="stylesheet" href="/static/plugins/dropzone/dropzone.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
     <script src="/static/plugins/dropzone/dropzone.js"></script>
 {% endblock %}
 {% block content-container %}
@@ -41,16 +42,15 @@
 
                     </select>
                      <form id="filedropzone" action="{% url 'task_file_upload' %}?random_str={{ random_str }}" class="dropzone dz-clickable">
-					            <div class="dz-default dz-message">
-					                <div class="dz-icon">
-					                    <i class="demo-pli-upload-to-cloud icon-5x"></i>
-					                </div>
-					                <div>
-					                    <span class="dz-text">Drop files to upload</span>
-					                    <p class="text-sm text-muted">or click to pick manually</p>
-					                </div>
-					            </div>
-
+                         <div class="dz-default dz-message">
+                            <div class="dz-icon icon-wrap icon-circle icon-wrap-md">
+                                <i class="fa fa-cloud-upload fa-3x"></i>
+                            </div>
+                            <div>
+                                <p class="dz-text">Drop files to upload</p>
+                                <p class="text-muted">or click to pick manually</p>
+                            </div>
+                        </div>
                     </form>
 {#                    <input class="form-control" type="file" >#}
                     <input id="remote_path" class="form-control" type="text" placeholder="远程路径">

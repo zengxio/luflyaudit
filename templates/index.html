@@ -382,7 +382,7 @@
 
 
 						            <li>
-						                <a href="">
+						                <a href="#">
 						                    <i class="psi-hipster-headphones"></i>
 						                    <span class="menu-title">
 												<strong>配置</strong>
@@ -519,9 +519,9 @@
 
             <!-- Visible when footer positions are fixed -->
             <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-            <div class="show-fixed pull-right">
-                You have <a href="#" class="text-bold text-main"><span class="label label-danger">3</span> pending action.</a>
-            </div>
+{#            <div class="show-fixed pull-right">#}
+{#                You have <a href="#" class="text-bold text-main"><span class="label label-danger">3</span> pending action.</a>#}
+{#            </div>#}
 
 
 
@@ -561,10 +561,8 @@
     <script>
         //active-link
         $(document).ready(function () {
-            $("#mainnav-menu a").click(function () {
-                $(this).parent().addClass("active-link").siblings().removeClass("active-link")
-            })
-            $("#mainnav-menu a[href='{{ request.path }}'").parent().addClass('active-link')
+              $("#mainnav-menu a[href='{{ request.path }}']").parent().addClass('active-link').siblings().removeClass("active-link");
+              $("#mainnav-menu a[href='{{ request.path }}']").parent().parent().addClass('in');
         })
 
     </script>
