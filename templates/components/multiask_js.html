@@ -55,16 +55,35 @@
                  alert("主机未选择");
                 return false
             }
-            var cmd_text=$("#cmd").val().trim();
-            if(cmd_text.length==0){
-                alert("未输入命令");
-                 return false
-            };
+            if(task_type=='cmd'){
+                var cmd_text=$("#cmd").val().trim();
+                if(cmd_text.length==0){
+                    alert("未输入命令");
+                     return false
+                }
+            }else{
+                //file_transfer
+                var remote_path=$("#remote_path").val();
+                if($.trim(remote_path).length==0){
+                    alert("must specify remote path");
+                    return false
+                }
+            }
+
             var task_data={
                 "task_type":task_type,
                 "selected_host_ids":selected_host_ids,
-                'cmd':cmd_text
+{#                'cmd':cmd_text#}
             };
+            if(task_type=='cmd'){
+                task_data['cmd']=cmd_text
+            }else {
+                var file_transfer_type=$("select[name='transfer-type']").val();
+                task_data['file_transfer_type']=file_transfer_type;
+                task_data['random_str']="{{ random_str }}";
+                task_data['remote_path']=$("#remote_path").val()
+
+            }
             $.post("{% url 'multitask' %}",{'csrfmiddlewaretoken':"{{ csrf_token }}",'task_data':JSON.stringify(task_data)},
                 function(callback){
                     console.log(callback); //task id
@@ -73,6 +92,10 @@
                     result_timer=setInterval(function () {
                         GetTaskResult(callback.task_id)
                     },2000);
+                    //display download file btn
+                    $("#file-download-btn").removeClass("hide").attr('href',"{% url 'task_file_download' %}?task_id="+callback.task_id)
+
+
 
 
                 });//cmd post

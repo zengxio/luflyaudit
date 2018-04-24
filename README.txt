@@ -100,6 +100,19 @@ web 开发模式
 		2、初始化数据表tasklog
 
 	文件分发
+	从远程下载
+		输入远程的路径
+		本地路径   不需要。(下载到指定的目录)
+	 下载到堡垒机上路径/downloads/task_id/ip_addr.文件
+
+	上传
+		允许上传文件
+		指定文件传到远程的路径
+	上传到堡垒机上路径 /uploads/account.id/随机字符串/文件
+	1、第一次返回页面时，生成随机字符串，返回到页面
+	2、每个文件上传时，都会自动带着随机字符串
+	3、后台视图，只需要找到用户名后的随机字符串。把文件传到这里
+	4、页面提交任务的时候，在数据库task这里存随机字符串
 
 注意: 由于数据库sqllite 是用的utc时间。所以代码里面出现了time_obj = datetime.datetime.utcnow() - datetime.timedelta(seconds=300) 。
 如果需要字符编码的错误，修改linux服务器上的该文件 /usr/local/python/lib/python3.5/site-packages/paramiko/py3compat.py    将utf8换成gbk

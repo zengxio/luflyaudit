@@ -1,6 +1,7 @@
 {% extends 'index.html' %}
 {% block extra-css %}
     <link rel="stylesheet" href="/static/plugins/dropzone/dropzone.css">
+    <script src="/static/plugins/dropzone/dropzone.js"></script>
 {% endblock %}
 {% block content-container %}
      <div id="page-title">
@@ -39,12 +40,25 @@
                         <option value="get">从远程主机下载文件</option>
 
                     </select>
-                    <input class="form-control" type="file" >
-                    <input class="form-control" type="text" placeholder="远程路径">
+                     <form id="filedropzone" action="{% url 'task_file_upload' %}?random_str={{ random_str }}" class="dropzone dz-clickable">
+					            <div class="dz-default dz-message">
+					                <div class="dz-icon">
+					                    <i class="demo-pli-upload-to-cloud icon-5x"></i>
+					                </div>
+					                <div>
+					                    <span class="dz-text">Drop files to upload</span>
+					                    <p class="text-sm text-muted">or click to pick manually</p>
+					                </div>
+					            </div>
+
+                    </form>
+{#                    <input class="form-control" type="file" >#}
+                    <input id="remote_path" class="form-control" type="text" placeholder="远程路径">
 
 
-                    <button onclick="PostTask('cmd')" class="btn btn-success pull-right">执行</button>
+                    <button onclick="PostTask('file_transfer')" class="btn btn-success pull-right">执行</button>
                     <button class="btn btn-danger pull-right">终止</button>
+                    <a id="file-download-btn" class="btn btn-info pull-right hide" href="" >下载任务文件到本地</a>
                 </div>
             </div>
             {% include 'components/taskresult.html' %}
@@ -53,6 +67,20 @@
     </div>
     {% include 'components/multiask_js.html' %}
     <script>
+        $(document).ready(function () {
+             Dropzone.options.filedropzone = {
+              paramName: "file", // The name that will be used to transfer the file
+              maxFilesize: 2, // MB
+              maxFiles:2,
+              accept: function(file, done) {
+                if (file.name == "timg.jpg") {
+                  done("Naha, you don't.");
+                }
+                else { done(); }
+              }
+            };
+              //Dropzone.autoDiscover = false;
+        });
         function ToggleUploadEle(self) {
             if($(self).val()=='get'){
                 $(self).next().addClass("hide")

@@ -27,7 +27,8 @@ class Task(object):
                     return True
                 self.errors.append({'Invalid_argument':'cmd or host_list is empty'})
             elif self.task_data.get("task_type") == 'file_transfer':
-                self.errors.append({'Invalid_argument': 'cmd or host_list is empty'})
+                # self.errors.append({'Invalid_argument': 'cmd or host_list is empty'})
+                return True
             else:
                 self.errors.append({'Invalid_argument': 'task_type is invalid'})
         self.errors.append({"Invalid_data":'task_data is not exist'})
@@ -76,3 +77,27 @@ class Task(object):
     def file_transfer(self):
         """p批量文件"""
         print("run file transfer ")
+
+        task_obj = models.Task.objects.create(
+            task_type=1,
+            account=self.request.user.account,
+            content=json.dumps(self.task_data)
+        )
+
+        host_ids = set(self.task_data.get("selected_host_ids"))
+        tasklog_objs = []
+        for host_id in host_ids:
+            tasklog_objs.append(
+                models.TaskLog(task_id=task_obj.id,
+                               host_user_bind_id=host_id,
+                               status=3
+                               )
+            )
+        models.TaskLog.objects.bulk_create(tasklog_objs, 100)
+
+        cmd_str = "python %s %s" % (settings.MULTI_TASK_SCRIPT, task_obj.id)
+        multitask_obj = subprocess.Popen(cmd_str,
+                                         shell=True, stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)
+        # print("task result..." ,multitask_obj.stdout.read(),multitask_obj.stderr.read().decode("gbk"))
+        return task_obj.id

@@ -28,5 +28,7 @@ urlpatterns = [
     url(r'^multitask/file_transfer/$', views.multi_file_transfer,name="multi_file_transfer"),
     url(r'^api/hostlist/$', views.get_host_list,name="get_host_list"),
     url(r'^api/token/$', views.get_token,name="get_token"),
+    url(r'^api/task/file_upload/$', views.task_file_upload,name="task_file_upload"),
+    url(r'^api/task/file_download/$', views.task_file_download,name="task_file_download"),
 
 ]

@@ -125,3 +125,6 @@ LOGIN_URL='/login/'
 STATICFILES_DIRS=(os.path.join(BASE_DIR,'static'),)
 # TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates'),)
 SESSION_TRACKER_SCRIPT=os.path.join(BASE_DIR,'audit/backend/session_tracker.sh')
+FILE_UPLOADS=os.path.join(BASE_DIR,'uploads')
+FILE_DOWNLOADS=os.path.join(BASE_DIR,'downloads')
+
